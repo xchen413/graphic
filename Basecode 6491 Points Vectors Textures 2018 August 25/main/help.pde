@@ -19,4 +19,5 @@ void showHelpScreen()
     writeLine("FILENAME FN C:set to content of clipboard",L++);
     writeLine("CAPTURE CANVAS to FN ~:pdf, !:jpg, @:tif, `:filming restart/stop",L++);
     writeLine("4 QUADS: 4:squares, R:read(FN), W:write(FN), f:fill, t:texture",L++);
+    writeLine("SQUINT: m:show SQUINT map, UP: increase N, DOWN: decrease N, t:texture",L++);
     }

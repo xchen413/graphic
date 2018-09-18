@@ -1,10 +1,32 @@
-void  LERPquads(PNT A, PNT B, PNT C, PNT D, PNT[] Point, float time)
+void  LERPquads(PNT A, PNT B, PNT C, PNT D, PNT[] Point, float time,int i)
   {
-  int i=0;
-  A.setTo(LERP(Point[i],time,Point[12+i++]));
-  B.setTo(LERP(Point[i],time,Point[12+i++]));
-  C.setTo(LERP(Point[i],time,Point[12+i++]));
-  D.setTo(LERP(Point[i],time,Point[12+i++]));
+
+
+  
+  PNT A1 =P();
+  PNT B1 =P();
+  PNT C1 =P();
+  PNT D1 =P();
+  PNT A0 =P();
+  PNT B0 =P();
+  PNT C0 =P();
+  PNT D0 =P();
+  
+
+  A0.setTo(Point[i]);
+  B0.setTo(Point[i+1]);
+  C0.setTo(Point[i+2]);
+  D0.setTo(Point[i+3]);
+  
+  A1.setTo(Point[(i+4)%16]);
+  B1.setTo(Point[(i+5)%16]);
+  C1.setTo(Point[(i+6)%16]);
+  D1.setTo(Point[(i+7)%16]);
+  
+  A.setTo(LERP(A0,time,A1));
+  B.setTo(LERP(B0,time,B1));
+  C.setTo(LERP(C0,time,C1));
+  D.setTo(LERP(D0,time,D1));
   }
 
 void LPMquads(PNT A, PNT B, PNT C, PNT D, PNT[] Point, float time,int i){
