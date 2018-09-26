@@ -2,22 +2,37 @@
 PNT Neville(float a, PNT A, float b, PNT B, float t) 
   {
   //**UG** ADD YOUR CODE HERE INSTEAD OF LINE BELOW
-  return LERP(A,t,B);  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
+  PNT xt = P();
+  float s =(t-a)/(b-a);
+  xt = P(A,s,V(A,B));
+  return xt;  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
   }
   
 PNT Neville(float a, PNT A, float b, PNT B, float c, PNT C, float t) 
   {
     //**UG** ADD YOUR CODE HERE INSTEAD OF LINE BELOW
-  return  Neville(a,A,c,C,t);  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
+    PNT S =P();
+    PNT E =P();
+    S = Neville(a,A,b,B,t);
+    E = Neville(b,B,c,C,t);
+    PNT xt = P();
+    xt = Neville(a,S,c,E,t);
+  return  xt;  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
   }
   
 PNT Neville(float a, PNT A, float b, PNT B, float c, PNT C, float d, PNT D, float t) 
   {
   //**UG** ADD YOUR CODE HERE INSTEAD OF LINE BELOW
-  return Neville(a,A,d,D,t);  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
+  PNT S=P();
+  PNT E=P();
+  PNT xt =P();
+  S = Neville(a,A,b,B,c,C,t);
+  E = Neville(b,B,c,C,d,D,t);
+  xt = Neville(a,S,d,E,t);
+  return xt;  // INCORRET SOLUTION PROVIDED AS PLACEHOLDER
   }
 
-void drawNevilleCurve(float a, PNT A, float b, PNT B, float c, PNT C, float d, PNT D)
+void drawNevilleCurve(float a, PNT A, float b, PNT B, float c, PNT C,float d, PNT D)
     {
     float du=1./90;
     beginShape(); 

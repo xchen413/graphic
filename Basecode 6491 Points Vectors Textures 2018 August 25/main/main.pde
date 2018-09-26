@@ -39,6 +39,8 @@ boolean fill=false;
 boolean filming=false;  // when true frames are captured in FRAMES for a movie
 
 boolean showSQUINT = false;
+boolean showNeville= false;
+boolean showCurve = false;
 
 // flags used to control when a frame is captured and which picture format is used 
 boolean recordingPDF=false; // most compact and great, but does not always work
@@ -140,6 +142,7 @@ void draw()      // executed at each frame (30 times per second)
 
         drawEdgeAsArrow(Et);
         writeLabel(Et.PNTnearB(), " LPM");
+
         noFill();
         stroke(grey);
         strokeWeight(1);
@@ -171,6 +174,39 @@ void draw()      // executed at each frame (30 times per second)
         drawCircle(D, 4);
       }
       noFill();
+
+      if (showNeville) { //draw Neville curve
+        float a=0;
+        float b=0;
+        float c=0;
+        float d =0;
+
+
+        if (method ==0) { //knot method 0=uniform
+          a=0;
+          b=float(1)/float(3);
+          c=float(2)/float(3);
+          d =1;
+        }else if(method ==1){ //chordal 
+          a=0;
+          b = a+normOf(V(A,B));
+          c = b+normOf(V(B,C));
+          d = c+normOf(V(C,D));
+          b=b/d;
+          c=c/d;
+          d = 1;
+        }else if (method ==2){//centripetal
+          a=0;
+          b = a+sqrt(normOf(V(A,B)));
+          c = b+sqrt(normOf(V(B,C)));
+          d = c+sqrt(normOf(V(C,D)));
+          b=b/d;
+          c=c/d;
+          d = 1;
+        }
+        drawNevilleCurve(a, A, b, B, c, C, d, D);
+        noFill();
+      }
     } // end of when 4 points
 
 
@@ -247,13 +283,14 @@ void draw()      // executed at each frame (30 times per second)
           int i=8;
           LPMquads(At, Bt, Ct, Dt, Point, 3*(time-0.6667), i);
         }
-        noFill();
-        stroke(grey);
-        strokeWeight(1);
-        showSpiralquad(Point, 0);
-        showSpiralquad(Point, 4);
-        showSpiralquad(Point, 8);
-
+        if (showCurve) {
+          noFill();
+          stroke(grey);
+          strokeWeight(1);
+          showSpiralquad(Point, 0);
+          showSpiralquad(Point, 4);
+          showSpiralquad(Point, 8);
+        }
         noFill(); 
         noStroke(); 
         if (texturing) 
@@ -264,6 +301,27 @@ void draw()      // executed at each frame (30 times per second)
           if (fill) fill(cyan);
           strokeWeight(5); 
           stroke(red, 100); // semitransparent
+          drawQuad(At, Bt, Ct, Dt);
+        }
+      }
+
+      if (showNeville) { //draw Neville
+
+        noFill(); 
+        stroke(black);
+        strokeWeight(1);
+        NevilleQuad(At, Bt, Ct, Dt, Point, time);
+
+        noFill(); 
+        noStroke(); 
+        if (texturing) 
+          drawQuadTextured(At, Bt, Ct, Dt, FaceStudent1); // see ``points'' TAB for implementation
+        else
+        {
+          noFill(); 
+          if (fill) fill(cyan);
+          strokeWeight(5); 
+          stroke(green, 100); // semitransparent
           drawQuad(At, Bt, Ct, Dt);
         }
       }
@@ -334,7 +392,7 @@ void draw()      // executed at each frame (30 times per second)
 
       if (pointsCount==16) {
         background(white);
-        
+
         noFill(); 
         strokeWeight(3); 
         for (int i=0; i<4; i++) {
@@ -376,13 +434,14 @@ void draw()      // executed at each frame (30 times per second)
             int i=8;
             LPMquads(At, Bt, Ct, Dt, Point, 3*(time-0.6667), i);
           }
-          noFill();
-          stroke(grey);
-          strokeWeight(1);
-          showSpiralquad(Point, 0);
-          showSpiralquad(Point, 4);
-          showSpiralquad(Point, 8);
-
+          if (showCurve) {
+            noFill();
+            stroke(grey);
+            strokeWeight(1);
+            showSpiralquad(Point, 0);
+            showSpiralquad(Point, 4);
+            showSpiralquad(Point, 8);
+          }
           noFill(); 
           noStroke(); 
           if (texturing) 
