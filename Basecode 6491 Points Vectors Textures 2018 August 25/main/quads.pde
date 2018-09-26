@@ -200,33 +200,46 @@ void NevilleQuad(PNT At, PNT Bt, PNT Ct, PNT Dt, PNT[] Point, float time) {
 }
 
 
-void RegisterQuad(PNT At, PNT Bt, PNT Ct, PNT Dt, PNT[] Point, int m, float t) {
+void RegisterQuad(PNT At, PNT Bt, PNT Ct, PNT Dt, PNT[] Point, int m, float t, boolean inverse) {
   PNT[] M = new PNT[4];
   PNT[] N = new PNT[4];
   PNT[] R = new PNT[4];
-  M[0].setTo(Point[m]);
-  M[1].setTo(Point[m+1]);
-  M[2].setTo(Point[m+2]);
-  M[3].setTo(Point[m+3]);
+  if (!inverse) {
+    M[0]=Point[m];
+    M[1]=Point[m+1];
+    M[2]=Point[m+2];
+    M[3]=Point[m+3];
 
-  N[0].setTo(Point[(m+4)%16]);
-  N[1].setTo(Point[(m+5)%16]);
-  N[2].setTo(Point[(m+6)%16]);
-  N[3].setTo(Point[(m+7)%16]);  
+    N[0]=Point[(m+4)%16];
+    N[1]=Point[(m+5)%16];
+    N[2]=Point[(m+6)%16];
+    N[3]=Point[(m+7)%16];
+  } else {
+    N[0]=Point[m];
+    N[1]=Point[m+1];
+    N[2]=Point[m+2];
+    N[3]=Point[m+3];
 
-  R[0].setTo(M[0]);
-  R[1].setTo(M[1]);
-  R[2].setTo(M[2]);
-  R[3].setTo(M[3]);
+    M[0]=Point[(m+4)%16];
+    M[1]=Point[(m+5)%16];
+    M[2]=Point[(m+6)%16];
+    M[3]=Point[(m+7)%16];
+  }
+  R[0]=M[0];
+  R[1]=M[1];
+  R[2]=M[2];
+  R[3]=M[3];
 
 
   //translate 
-  PNT A=centroid(M, 4); //stroke(green);// drawCircle(A, 4); 
-  PNT B=centroid(N, 4); //stroke(red); //drawCircle(B, 4);
+  PNT A=centroid(M, 4); 
+  PNT B=centroid(N, 4); 
   PNT C=P(A, t, V(A, B));
-  for (int i=0; i<4; i+=1) {
-    R[i]=P(M[i], t, V(M[i], N[i]));
-  }
+ 
+  //for (int i=0; i<4; i+=1) {
+  //  R[i]=P(M[i], t, V(M[i], N[i]));
+
+  //}
 
   //rotate
   float s=0;
@@ -238,17 +251,16 @@ void RegisterQuad(PNT At, PNT Bt, PNT Ct, PNT Dt, PNT[] Point, int m, float t) {
     h+=dot(V(A, M[i]), V(B, N[i]));
   }
   float a =atan2(s, h);
-
   //scale
-  float l=0;
+  float l=1;
   for (int i=0; i<4; i+=1) {
     l =l*(normOf(V(B, N[i]))/normOf(V(A, M[i])));
   }
   l=pow(l, 0.25);
-
   //moving 4 points with time
   for (int i=0; i<4; i+=1) {
-    R[i]=P(C, t*l, Rotated(V(A, M[i]), a*t));
+    R[i]=P(C, pow(l, t), Rotated(V(A, M[i]), a*t));
+    //fill(grey);stroke(red);drawCircle(R[i], 1);
   }
 
   At.setTo(R[0]);
@@ -268,4 +280,56 @@ PNT centroid(PNT[] A, int n) {
   C.x=X/float(n);
   C.y = Y/float(n);
   return C;
+}
+
+void drawRegistration(int i, PNT[] Point) {
+  PNT A1=P(); 
+  PNT A2=P(); 
+  PNT A3=P();
+  PNT A4=P();
+  PNT B1=P(); 
+  PNT B2=P(); 
+  PNT B3=P();
+  PNT B4=P();
+  PNT At=P(); 
+  PNT Bt=P(); 
+  PNT Ct=P();
+  PNT Dt=P();
+
+  //float du=1./90;
+  beginShape(); 
+  for (float u=0; u<=1.05; u+=0.05) {
+    RegisterQuad(A1, A2, A3, A4, Point, i, u, false);
+    RegisterQuad(B1, B2, B3, B4, Point, i, 1-u, true);
+    At =LERP(A1, u, B1);
+    vert(At);
+  } 
+  endShape();
+
+  beginShape(); 
+  for (float u=0; u<=1.05; u+=0.05) {
+    RegisterQuad(A1, A2, A3, A4, Point, i, u, false);
+    RegisterQuad(B1, B2, B3, B4, Point, i, 1-u, true);
+    Bt =LERP(A2, u, B2);
+    vert(Bt);
+  } 
+  endShape();
+
+  beginShape(); 
+  for (float u=0; u<=1.05; u+=0.05) {
+    RegisterQuad(A1, A2, A3, A4, Point, i, u, false);
+    RegisterQuad(B1, B2, B3, B4, Point, i, 1-u, true);
+    Ct =LERP(A3, u, B3);
+    vert(Ct);
+  } 
+  endShape();
+  
+  beginShape(); 
+  for (float u=0; u<=1.05; u+=0.05) {
+    RegisterQuad(A1, A2, A3, A4, Point, i, u, false);
+    RegisterQuad(B1, B2, B3, B4, Point, i, 1-u, true);
+    Dt =LERP(A4, u, B4);
+    vert(Dt);
+  } 
+  endShape();
 }

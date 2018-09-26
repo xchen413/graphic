@@ -31,7 +31,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
 
     if(key=='a') {animating=!animating;}
     if(key=='b') ; 
-    if(key=='c') ; 
+    if(key=='c') showRegister=!showRegister; 
     if(key=='d') ;  
     if(key=='e') ;
     if(key=='f') fill=!fill;

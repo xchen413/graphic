@@ -41,6 +41,7 @@ boolean filming=false;  // when true frames are captured in FRAMES for a movie
 boolean showSQUINT = false;
 boolean showNeville= false;
 boolean showCurve = false;
+boolean showRegister = false;
 
 // flags used to control when a frame is captured and which picture format is used 
 boolean recordingPDF=false; // most compact and great, but does not always work
@@ -187,19 +188,19 @@ void draw()      // executed at each frame (30 times per second)
           b=float(1)/float(3);
           c=float(2)/float(3);
           d =1;
-        }else if(method ==1){ //chordal 
+        } else if (method ==1) { //chordal 
           a=0;
-          b = a+normOf(V(A,B));
-          c = b+normOf(V(B,C));
-          d = c+normOf(V(C,D));
+          b = a+normOf(V(A, B));
+          c = b+normOf(V(B, C));
+          d = c+normOf(V(C, D));
           b=b/d;
           c=c/d;
           d = 1;
-        }else if (method ==2){//centripetal
+        } else if (method ==2) {//centripetal
           a=0;
-          b = a+sqrt(normOf(V(A,B)));
-          c = b+sqrt(normOf(V(B,C)));
-          d = c+sqrt(normOf(V(C,D)));
+          b = a+sqrt(normOf(V(A, B)));
+          c = b+sqrt(normOf(V(B, C)));
+          d = c+sqrt(normOf(V(C, D)));
           b=b/d;
           c=c/d;
           d = 1;
@@ -246,10 +247,10 @@ void draw()      // executed at each frame (30 times per second)
       PNT At=P(), Bt=P(), Ct=P(), Dt=P();
       if (showLERP) 
       {
-        if (time<=(0.3333)) {
+        if (time<=(float(1)/float(3))) {
           int i=0;
           LERPquads(At, Bt, Ct, Dt, Point, time*3, i);
-        } else if (time<=(0.6667)) {
+        } else if (time<=(float(2)/float(3))) {
 
           int i=4;
           LERPquads(At, Bt, Ct, Dt, Point, 3*(time-0.333), i);
@@ -272,10 +273,10 @@ void draw()      // executed at each frame (30 times per second)
       }
       if (showLPM) 
       {
-        if (time<=(0.3333)) {
+        if (time<=(float(1)/float(3))) {
           int i=0;
           LPMquads(At, Bt, Ct, Dt, Point, time*3, i);
-        } else if (time<=(0.6667)) {
+        } else if (time<=(float(2)/float(3))) {
 
           int i=4;
           LPMquads(At, Bt, Ct, Dt, Point, 3*(time-0.333), i);
@@ -324,8 +325,62 @@ void draw()      // executed at each frame (30 times per second)
           stroke(green, 100); // semitransparent
           drawQuad(At, Bt, Ct, Dt);
         }
-      }
-    } // end of when 16 points
+      }//end of neville
+
+      if (showRegister) {
+        PNT A1=P(); 
+        PNT A2=P(); 
+        PNT A3=P();
+        PNT A4=P();
+        PNT B1=P(); 
+        PNT B2=P(); 
+        PNT B3=P();
+        PNT B4=P();
+        float t=0;
+        if (time<=(float(1)/float(3))) {
+          t=time*3;
+          RegisterQuad(A1, A2, A3, A4, Point, 0, t, false);
+          RegisterQuad(B1, B2, B3, B4, Point, 0, 1-t, true);
+        } else if (time<=(float(2)/float(3))) {
+          //RegisterQuad(At,Bt,Ct,Dt,Point,4,(time-(float(1)/float(3)))*3); 
+          t=(time-(float(1)/float(3)))*3;
+          RegisterQuad(A1, A2, A3, A4, Point, 4, t, false);
+          RegisterQuad(B1, B2, B3, B4, Point, 4, 1-t, true);
+        } else {
+          //RegisterQuad(At,Bt,Ct,Dt,Point,8,(time-(float(2)/float(3)))*3);
+          t=(time-(float(2)/float(3)))*3;
+          RegisterQuad(A1, A2, A3, A4, Point, 8, t, false);
+          RegisterQuad(B1, B2, B3, B4, Point, 8, 1-t, true);
+        }
+        At =LERP(A1, t, B1);
+        Bt =LERP(A2, t, B2);
+        Ct =LERP(A3, t, B3);
+        Dt =LERP(A4, t, B4);
+        noFill(); 
+        noStroke(); 
+        if (texturing) 
+          drawQuadTextured(At, Bt, Ct, Dt, FaceStudent1); // see ``points'' TAB for implementation
+        else
+        {
+          noFill(); 
+          if (fill) fill(cyan);
+          strokeWeight(5); 
+          stroke(grey, 100); // semitransparent
+          drawQuad(At, Bt, Ct, Dt);
+        }
+
+        noFill();
+        noStroke();
+        if (showCurve) {
+          noFill();
+          strokeWeight(1); 
+          stroke(yellow); 
+          drawRegistration(0,Point);
+          drawRegistration(4,Point);
+          drawRegistration(8,Point);
+        }
+      }//end of Register
+    } // end of when 16 points 
 
     if (showSQUINT) {
 

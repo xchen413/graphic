@@ -25,4 +25,5 @@ void showHelpScreen()
     writeLine("SQUINT: m:show SQUINT map, UP: increase N, DOWN: decrease N, t:texture",L++);
     writeLine("NEVILLE CUBIC: n : show Neville cube, $:show/hide curves",L++);
     writeLine("KNOT METHOD: 0: uniform, 1: chordal, 2: centripetal",L++);
+    writeLine("Register: c: show Register for quads, $:show/hide curves",L++);
     }
