@@ -190,6 +190,8 @@ void NevilleQuad(PNT At, PNT Bt, PNT Ct, PNT Dt, PNT[] Point, float time) {
 
     xt[i] = Neville(a, A, b, B, c, C, d, D, time);
     if (showCurve) {
+      noFill();
+      stroke(black,100);
       drawNevilleCurve(a, A, b, B, c, C, d, D);
     }
   }

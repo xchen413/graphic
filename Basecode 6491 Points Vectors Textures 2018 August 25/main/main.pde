@@ -181,6 +181,11 @@ void draw()      // executed at each frame (30 times per second)
         float b=0;
         float c=0;
         float d =0;
+        fill(black);
+        String nv1 = "Neville";
+
+        text(nv1, 300, 30);
+        noFill();
 
 
         if (method ==0) { //knot method 0=uniform
@@ -188,6 +193,10 @@ void draw()      // executed at each frame (30 times per second)
           b=float(1)/float(3);
           c=float(2)/float(3);
           d =1;
+          fill(black);
+          String nv2 = "Method = Uniform";
+          text(nv2, 300, 60);
+          noFill();
         } else if (method ==1) { //chordal 
           a=0;
           b = a+normOf(V(A, B));
@@ -196,6 +205,10 @@ void draw()      // executed at each frame (30 times per second)
           b=b/d;
           c=c/d;
           d = 1;
+          fill(black);
+          String nv2 = "Method = Chordal";
+          text(nv2, 300, 60);
+          noFill();
         } else if (method ==2) {//centripetal
           a=0;
           b = a+sqrt(normOf(V(A, B)));
@@ -204,6 +217,10 @@ void draw()      // executed at each frame (30 times per second)
           b=b/d;
           c=c/d;
           d = 1;
+          fill(black);
+          String nv2 = "Method = Centripetal";
+          text(nv2, 300, 60);
+          noFill();
         }
         drawNevilleCurve(a, A, b, B, c, C, d, D);
         noFill();
@@ -245,8 +262,13 @@ void draw()      // executed at each frame (30 times per second)
       stroke(red, 100); // semitransparent
       // *** replace {At,Bt..} by QUAD OBJECT in the code below
       PNT At=P(), Bt=P(), Ct=P(), Dt=P();
-      if (showLERP) 
-      {
+      if (showLERP) {
+        fill(black);
+        String lp = "Blue :LERP";
+
+        text(lp, 300, 90);
+        noFill();
+
         if (time<=(float(1)/float(3))) {
           int i=0;
           LERPquads(At, Bt, Ct, Dt, Point, time*3, i);
@@ -271,8 +293,13 @@ void draw()      // executed at each frame (30 times per second)
           drawQuad(At, Bt, Ct, Dt);
         }
       }
-      if (showLPM) 
-      {
+      if (showLPM) {
+        fill(black);
+        String lpm = "Red :LPM";
+
+        text(lpm, 300, 120);
+        noFill();
+
         if (time<=(float(1)/float(3))) {
           int i=0;
           LPMquads(At, Bt, Ct, Dt, Point, time*3, i);
@@ -308,6 +335,27 @@ void draw()      // executed at each frame (30 times per second)
 
       if (showNeville) { //draw Neville
 
+        fill(black);
+        String nv1 = "Green :Neville";
+
+        text(nv1, 300, 30);
+        noFill();
+        if (method==0) {
+          fill(black);
+          String nv2 = "Method = Uniform";
+          text(nv2, 300, 60);
+          noFill();
+        } else if (method ==1) {
+          fill(black);
+          String nv2 = "Method = Chordal";
+          text(nv2, 300, 60);
+          noFill();
+        } else {
+          fill(black);
+          String nv2 = "Method = Centripetal";
+          text(nv2, 300, 60);
+          noFill();
+        }
         noFill(); 
         stroke(black);
         strokeWeight(1);
@@ -328,6 +376,11 @@ void draw()      // executed at each frame (30 times per second)
       }//end of neville
 
       if (showRegister) {
+        fill(black);
+        String rc = "Grey :Register + residual";
+
+        text(rc, 300, 150);
+        noFill();
         PNT A1=P(); 
         PNT A2=P(); 
         PNT A3=P();
@@ -375,9 +428,9 @@ void draw()      // executed at each frame (30 times per second)
           noFill();
           strokeWeight(1); 
           stroke(yellow); 
-          drawRegistration(0,Point);
-          drawRegistration(4,Point);
-          drawRegistration(8,Point);
+          drawRegistration(0, Point);
+          drawRegistration(4, Point);
+          drawRegistration(8, Point);
         }
       }//end of Register
     } // end of when 16 points 
