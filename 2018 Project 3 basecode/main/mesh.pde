@@ -5,7 +5,7 @@ class MESH {
     pt[] G = new pt [maxnv];                        
     // TRIANGLES 
     int nt = 0, maxnt = maxnv*2;                           
-    boolean[] isInterior = new boolean[maxnv];                                      
+    int[] isInterior = new int[maxnv];                                      
     // CORNERS 
     int c=0;    // current corner                                                              
     int nc = 0; 
@@ -14,7 +14,9 @@ class MESH {
     
     //unuse triangles
     int[] UV = new int [3*maxnt]; 
-    int nu=0;
+    int nu=0; // count of UV
+    
+    
     void ResetCut(){for(int i=0;i<nu;i++){UV[i]=0;};}
     // current corner that can be edited with keys
   MESH() {for (int i=0; i<maxnv; i++) G[i]=new pt();};
@@ -54,11 +56,14 @@ class MESH {
     {
     for (int v=0; v<nv; v++) 
       {
-      if(isInterior[v]) fill(green); else fill(red);
+      if(isInterior[v]==1) 
+        {fill(green);}
+      else if(isInterior[v]==2){ fill(black);}
+      else {fill(red);}
       show(G[v],r);
       }
     }                          
-  void showInteriorVertices(float r) {for (int v=0; v<nv; v++) if(isInterior[v]) show(G[v],r); }                          // shows all vertices as dots
+  void showInteriorVertices(float r) {for (int v=0; v<nv; v++) if(isInterior[v]==1) show(G[v],r); }                          // shows all vertices as dots
   void showTriangles() { for (int c=0; c<nc; c+=3) show(g(c), g(c+1), g(c+2)); }         // draws all triangles (edges, or filled)
   void showEdges() {for (int i=0; i<nc; i++) showEdge(i); };         // draws all edges of mesh twice
 
@@ -150,13 +155,25 @@ class MESH {
   void classifyVertices() 
     { 
     // **03 implement it
-      for(int v=0;v<nv;v++){isInterior[v]=true;}
+    int[] vcount = new int[nv];
+      for(int v=0;v<nv;v++){
+        isInterior[v]=1;
+  }
+     
       for(int i=0;i<nc;i++){
+        vcount[V[i]]++;
+        if(vcount[V[i]]>5)println(V[i]+"count >5");
         if(bord(i)){
-          isInterior[V[n(i)]]=false;
-          isInterior[V[p(i)]]=false;
+          isInterior[V[n(i)]]=0;
+          isInterior[V[p(i)]]=0;
         }
       }
+      //for(int i=0;i<nu;i++){
+      //  if(vcount[UV[i]]==0){
+      //    println("!!");
+      //    isInterior[UV[i]]=2;
+      //  }
+      //}
     }  
     
   void smoothenInterior() { // even interior vertiex locations
@@ -174,7 +191,7 @@ class MESH {
       Gn[v].div(CountNeighbor[v]);
     }
     
-    for (int v=0; v<nv; v++) if(isInterior[v]) G[v].translateTowards(.1,Gn[v]);
+    for (int v=0; v<nv; v++) if(isInterior[v]==1) G[v].translateTowards(.1,Gn[v]);
     }
 
 
@@ -231,7 +248,7 @@ void showBezier(pt A, pt B, pt C){
     
    void drawVoronoiFaceOfInteriorVertices(){
      float dc =1./(nv-1);
-     for(int v=0;v<nv;v++) if(isInterior[v]){fill(dc*255*v,dc*255*(nv-v),200);drawVoronoiFaceOfInteriorVertex(v);noFill();}
+     for(int v=0;v<nv;v++) if(isInterior[v]==1){fill(dc*255*v,dc*255*(nv-v),200);drawVoronoiFaceOfInteriorVertex(v);noFill();}
    }
    
    void drawVoronoiFaceOfInteriorVertex(int v){
@@ -262,6 +279,7 @@ void showBezier(pt A, pt B, pt C){
  
   pt triCenter(int c) {return P(g(c),g(n(c)),g(p(c))); }  // returns center of mass of triangle of corner c
   pt triCircumcenter(int c) {return CircumCenter(g(c),g(n(c)),g(p(c))); }  // returns circumcenter of triangle of corner c
+  
   /****************** phase 2 ******************************/
   void CheckCut(pt A, pt B){
     for (int i = 0;i<nt;i++){
@@ -296,6 +314,10 @@ void showBezier(pt A, pt B, pt C){
     
     }
     return unuse;
+  }
+  void CountPointsInUse(){
+    
+  
   }
   
 

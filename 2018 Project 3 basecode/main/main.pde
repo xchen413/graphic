@@ -161,37 +161,37 @@ void draw() {
     }
    }
     
-  if(step6)
-    { 
-    pushMatrix(); 
-    translate(0,0,6); noFill(); 
-    if(showVoronoiFaces) M.drawVoronoiFaceOfInteriorVertices();
-    stroke(blue); 
-    if(showVoronoi) M.showVoronoiEdges(); // **06 implement it in Mesh
-    stroke(red); 
-    if(showArcs) M.showArcs(); // **06 implement it in Mesh
-    noStroke();
-    popMatrix();
-    }
+  //if(step6)
+  //  { 
+  //  pushMatrix(); 
+  //  translate(0,0,6); noFill(); 
+  //  if(showVoronoiFaces) M.drawVoronoiFaceOfInteriorVertices();
+  //  stroke(blue); 
+  //  if(showVoronoi) M.showVoronoiEdges(); // **06 implement it in Mesh
+  //  stroke(red); 
+  //  if(showArcs) M.showArcs(); // **06 implement it in Mesh
+  //  noStroke();
+  //  popMatrix();
+  //  }
 
-  if(step7)
-    {
-    fill(blue); show(R.G[0],1.1*rb);
-    fill(orange); beam(P.G[0],P.G[1],rt);
-    fill(grey); beam(R.G[0],R.G[1],1.1*rt); beam(R.G[1],R.G[2],1.1*rt); beam(R.G[2],R.G[0],1.1*rt);
-    fill(red); show(CircumCenter(R.G[0],R.G[1],R.G[2]),15);
-    fill(magenta,200); show(CircumCenter(R.G[0],R.G[1],R.G[2]),circumRadius(R.G[0],R.G[1],R.G[2]));
-    }
+  //if(step7)
+  //  {
+  //  fill(blue); show(R.G[0],1.1*rb);
+  //  fill(orange); beam(P.G[0],P.G[1],rt);
+  //  fill(grey); beam(R.G[0],R.G[1],1.1*rt); beam(R.G[1],R.G[2],1.1*rt); beam(R.G[2],R.G[0],1.1*rt);
+  //  fill(red); show(CircumCenter(R.G[0],R.G[1],R.G[2]),15);
+  //  fill(magenta,200); show(CircumCenter(R.G[0],R.G[1],R.G[2]),circumRadius(R.G[0],R.G[1],R.G[2]));
+  //  }
     
-  if(step8)
-    {
-    CIRCLE C1 = Circ(R.G[0],rb), C2 = Circ(R.G[1],rb*1.2),  C3 = Circ(R.G[2],rb*1.8);
-    CIRCLE C = Apollonius(C1,C2,C3,-1,-1,-1);
-    fill(red,150); C1.showAsSphere();
-    fill(green,150); C2.showAsSphere();
-    fill(blue,150); C3.showAsSphere();
-    fill(yellow,200); C.showAsSphere();
-    }
+  //if(step8)
+  //  {
+  //  CIRCLE C1 = Circ(R.G[0],rb), C2 = Circ(R.G[1],rb*1.2),  C3 = Circ(R.G[2],rb*1.8);
+  //  CIRCLE C = Apollonius(C1,C2,C3,-1,-1,-1);
+  //  fill(red,150); C1.showAsSphere();
+  //  fill(green,150); C2.showAsSphere();
+  //  fill(blue,150); C3.showAsSphere();
+  //  fill(yellow,200); C.showAsSphere();
+  //  }
     
   if(step9)
     {
@@ -200,15 +200,17 @@ void draw() {
       //draw the cut line
       fill(blue);
       show(CutSet[0],20);
-      if(CutD>10){
+      if(CutD>20){
         show(CutE,15);
         CutSet[Cutn++].setTo(CutE);
         M.CheckCut(CutS,CutE);
         CutS = CutE;
       }
       for(int i=1;i<Cutn;i=i+1)
-       { beam(CutSet[i-1],CutSet[i],15);}
-      
+       {show(CutSet[i-1],15);
+       beam(CutSet[i-1],CutSet[i],15);}
+      println("nc:"+M.nc);
+      println("nv:"+M.nv);
       
     }
     
