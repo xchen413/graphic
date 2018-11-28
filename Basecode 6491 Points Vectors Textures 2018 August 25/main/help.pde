@@ -13,10 +13,17 @@ void showHelpScreen()
     writeLine("MENU <SPACE>:hide/show",L++);
     writeLine("POINTS click&drag:closest, x:moveAll, z:zoomAll,",L++);
     writeLine("POINTS ]:square, /:align r:read, w:write",L++);
-    writeLine("DISPLAY f:fill, #:Point IDs, v:arrows",L++);
+    writeLine("DISPLAY f:fill, #:Point IDs, v:arrows, ",L++);
     writeLine("ANIMATION a:on/off, ,/.:speedControl",L++);
-    writeLine("EDGE MORPH l:LERP, s:LPM",L++);
+    
     writeLine("FILENAME FN C:set to content of clipboard",L++);
     writeLine("CAPTURE CANVAS to FN ~:pdf, !:jpg, @:tif, `:filming restart/stop",L++);
+    writeLine("*******What I Implemented*****",L++);
+    writeLine("DISPLAY $:show curves",L++);
+    writeLine("EDGE MORPH l:LERP, s:LPM",L++);
     writeLine("4 QUADS: 4:squares, R:read(FN), W:write(FN), f:fill, t:texture",L++);
+    writeLine("SQUINT: m:show SQUINT map, UP: increase N, DOWN: decrease N, t:texture",L++);
+    writeLine("NEVILLE CUBIC: n : show Neville cube, $:show/hide curves",L++);
+    writeLine("KNOT METHOD: 0: uniform, 1: chordal, 2: centripetal",L++);
+    writeLine("Register: c: show Register for quads, $:show/hide curves",L++);
     }

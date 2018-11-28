@@ -5,7 +5,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
     if(key=='!') snapJPG=true; // make a .PDF picture of the canvas, compact, poor quality
     if(key=='@') snapTIF=true; // make a .TIF picture of the canvas, better quality, but large file
     if(key=='#') showLabels=!showLabels;
-    if(key=='$') ;
+    if(key=='$') showCurve =!showCurve;
     if(key=='%') ;
     if(key=='^') ;
     if(key=='&') ; 
@@ -31,7 +31,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
 
     if(key=='a') {animating=!animating;}
     if(key=='b') ; 
-    if(key=='c') ; 
+    if(key=='c') showRegister=!showRegister; 
     if(key=='d') ;  
     if(key=='e') ;
     if(key=='f') fill=!fill;
@@ -42,7 +42,7 @@ void keyPressed()  // executed each time a key is pressed: sets the Boolean "key
     if(key=='k') ; 
     if(key=='l') showLERP=!showLERP;
     if(key=='m') showSQUINT=!showSQUINT;
-    if(key=='n') ;
+    if(key=='n') showNeville = !showNeville;
     if(key=='o') ;  
     if(key=='p') ;
     if(key=='q') ; 
