@@ -62,6 +62,9 @@ MESH M = new MESH();
 //cut end point
 pt CutS = new pt();
 pt CutE = new pt();
+pt[] CutSet = new pt [10000];
+
+int Cutn=0;
 float CutD = 0;
 
 void setup() {
@@ -78,6 +81,8 @@ void setup() {
   sphereDetail(12);
   R=P; S=Q;
   println(); println("_______ _______ _______ _______");
+  
+  for(int i=0;i<10000;i++){CutSet[i]=P();}
   }
 
 void draw() {
@@ -194,12 +199,16 @@ void draw() {
   if(CutStart){
       //draw the cut line
       fill(blue);
-      show(CutS,20);
-      if(CutD>1){show(CutE,15);M.CheckCut(CutS,CutE);}
-      beam(CutS,CutE,15);
+      show(CutSet[0],20);
+      if(CutD>10){
+        show(CutE,15);
+        CutSet[Cutn++].setTo(CutE);
+        M.CheckCut(CutS,CutE);
+        CutS = CutE;
+      }
+      for(int i=1;i<Cutn;i=i+1)
+       { beam(CutSet[i-1],CutSet[i],15);}
       
-    
-    
       
     }
     

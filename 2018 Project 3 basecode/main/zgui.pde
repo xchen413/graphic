@@ -32,7 +32,7 @@ void keyPressed()
     if(key=='b') {for(int i=0; i<100; i++) M.smoothenInterior();   M.writeVerticesTo(R);}
     if(key=='c') ;//cut point 
     if(key=='d') {R.set_pv_to_pp(); R.deletePicked();}  
-    if(key=='e') {CutStart =false;CutD=0; M.ResetCut();};
+    if(key=='e') {CutStart =false;CutD=0; M.ResetCut(); for(int i=0;i<Cutn;i++){CutSet[i].setTo(0,0,0);};Cutn=0;};
     if(key=='f') ; // hold to move focus with mouse pressed
     if(key=='g') P.loadPts("data/pts"); 
     if(key=='h') ; // hold do change column height with mouse
@@ -169,7 +169,10 @@ void mouseDragged()
     }
     
   if(keyPressed && key=='c') {
-    if(!CutStart) {CutStart = true;CutS=Of; println("cut start vertex "+CutS.x+","+CutS.y);}
+    if(!CutStart) {CutStart = true;CutS=Of; 
+    CutSet[0].setTo(CutS);Cutn++;
+    println("cut start vertex "+CutS.x+","+CutS.y);}
+    
     CutE = Of;println("cut end vertex "+CutE.x+","+CutE.y+","+CutE.z);
     CutD = d(CutS,CutE);
   }
