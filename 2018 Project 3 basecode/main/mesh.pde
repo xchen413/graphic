@@ -15,7 +15,7 @@ class MESH {
     //unuse triangles
     int[] UV = new int [3*maxnt]; 
     int nu=0;
-    void ResetCut(){for(int i=0;i<nu;i++){UV[i]=0;};}
+    void ResetCut(){for(int i=0;i<nu;i++){UV[i]=0;};nu=0;}
     // current corner that can be edited with keys
   MESH() {for (int i=0; i<maxnv; i++) G[i]=new pt();};
   void reset() {nv=0; nt=0; nc=0;}                                                  // removes all vertices and triangles
@@ -265,19 +265,38 @@ void showBezier(pt A, pt B, pt C){
   /****************** phase 2 ******************************/
   void CheckCut(pt A, pt B){
     for (int i = 0;i<nt;i++){
-      if(CutTriangle(A,B,i)){
+      pt ta = g(i*3);
+      pt tb = g(i*3+1);
+      pt tc = g(i*3+2);
+      if(CutTriangle(A,B,ta,tb,tc)){
         UV[nu++]=V[i*3];UV[nu++]=V[i*3+1];UV[nu++]=V[i*3+2];
-       
+        deleteTriangle(i,V,nv);
+        nv=nv-3;
       }
+     }
+
+   }
+  void Recheck(pt A,pt B){
+    for (int i = 0;i<nu;i=i+3){
+       pt ta1 = G[UV[i]];
+       pt tb1 = G[UV[i]+1];
+       pt tc1 = G[UV[i]+2];
+      if(!CutTriangle(A,B,ta1,tb1,tc1)){
+        //addTriangle(i*3,i*3+1,i*3+2);
+        deleteTriangle(i,UV,nu);
+        nu=nu-3;
+      }
+     }
+  }
+  void deleteTriangle(int i,int[] set,int n){
+    for(int u=i;u<n;u++){
+      set[u]=set[u+3];
     }
-  
   }
 
-  boolean CutTriangle(pt A, pt B, int i){
+  boolean CutTriangle(pt A, pt B, pt ta, pt tb, pt tc){
     boolean intersect = false;
-    pt ta = g(i*3);
-    pt tb = g(i*3+1);
-    pt tc = g(i*3+2);
+    
     if(SegmentIntersect(A,B,ta,tb)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tb,tc)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tc,ta)){intersect = true;return intersect;}

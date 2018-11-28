@@ -172,6 +172,7 @@ void mouseDragged()
     if(!CutStart) {CutStart = true;CutS=Of; println("cut start vertex "+CutS.x+","+CutS.y);}
     CutE = Of;println("cut end vertex "+CutE.x+","+CutE.y+","+CutE.z);
     CutD = d(CutS,CutE);
+    CutEp=CutE;
   }
   change=true;
   }  

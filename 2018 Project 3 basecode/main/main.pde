@@ -62,6 +62,7 @@ MESH M = new MESH();
 //cut end point
 pt CutS = new pt();
 pt CutE = new pt();
+pt CutEp = new pt();
 float CutD = 0;
 
 void setup() {
@@ -197,11 +198,9 @@ void draw() {
       show(CutS,20);
       if(CutD>1){show(CutE,15);M.CheckCut(CutS,CutE);}
       beam(CutS,CutE,15);
+      if(!change){M.Recheck(CutS,CutE);}
       
-    
-    
-      
-    }
+  }
     
   
     
