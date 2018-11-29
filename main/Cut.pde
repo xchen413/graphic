@@ -6,6 +6,7 @@ boolean SegmentIntersect(pt p1, pt p2, pt p3, pt p4){
   A.setTo(p1);
   pt B = P();
   B.setTo(p3);
+ 
   float KA = -1; float KB = -1;
   if(!parallel(va,vb)){
     KA = d(N(V(A,B),vb),N(va,vb))/d(N(va,vb),N(va,vb));
@@ -17,4 +18,15 @@ boolean SegmentIntersect(pt p1, pt p2, pt p3, pt p4){
     }
   }
   return intersect;
+}
+
+float DistancePtoE(pt A, pt B,pt P){
+  float d=0;
+  if((d(V(A,B),V(A,P))>=0)&&(d(V(B,A),V(B,P))>=0)){
+    d = det3(V(A,B),V(A,P));
+  }
+  else{
+    d = min(norm(V(A,P)),norm(V(B,P)));
+  }
+  return d;
 }

@@ -79,7 +79,7 @@ void setup() {
   P.loadPts("data/pts");  
   Q.loadPts("data/pts2"); // loads saved models from file (comment out if they do not exist yet)
   noSmooth();
-  //frameRate(5);
+  frameRate(5);
   sphereDetail(12);
   R=P; S=Q;
   println(); println("_______ _______ _______ _______");
@@ -146,7 +146,9 @@ void draw() {
   if(step4)
     {
     if(!tuck){
-      for(int i=0;i<10;i++){M.smoothenBoundary(0.2);M.smoothenBoundary(-0.1);}
+      //for(int i=0;i<10;i++){
+      M.smoothenBoundary(0.2);M.smoothenBoundary(-0.2);
+    //}
      //if(tuckLimit<100){M.smoothenBoundary(0.5);tuckLimit++;}
      
      M.showBorderCorner();
@@ -154,6 +156,7 @@ void draw() {
       
     }
     else{
+     for(int i=0; i<10; i++){M.smoothenBoundary(0.25); }
     for(int i=0; i<10; i++) {M.smoothenInterior(0.1);}
     }
     M.writeVerticesTo(R);  

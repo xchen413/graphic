@@ -56,7 +56,7 @@ class MESH {
     {
     for (int v=0; v<nv; v++) 
       {
-      if(isInterior[v]==1){fill(brown);}
+      if(isInterior[v]==1){fill(green);}
       
       else if(isInterior[v]==3){ fill(black);}
       else if(isInterior[v]==2){fill(red);}
@@ -77,7 +77,7 @@ class MESH {
      for (int i=0;i<nv;i++){
        for(int j=i+1;j<nv;j++){
          for(int k=j+1;k<nv;k++){
-           if(!isFlatterThan(G[i],G[j],G[k],10)){
+           if(!isFlatterThan(G[i],G[j],G[k],20)){
              Center.setTo(CircumCenter(G[i],G[j],G[k]));
              good = true;
              for(int m=0;m<nv;m++){
@@ -285,11 +285,27 @@ void showBezier(pt A, pt B, pt C){
     ta.setTo(g(i*3));
     tb.setTo(g(i*3+1));
     tc.setTo(g(i*3+2));
+    //if(DistancePtoE(A,B,ta)<1){intersect = true;return intersect;}
+    //if(DistancePtoE(A,B,tb)<1){intersect = true;return intersect;}
+    //if(DistancePtoE(A,B,tc)<1){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,ta,tb)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tb,tc)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tc,ta)){intersect = true;return intersect;}
     return intersect;
   }
+  boolean CutSegment(pt A, pt B, int c){
+    boolean intersect = false;
+    pt ta = P();pt tb = P(); 
+    ta.setTo(g(n(c)));
+    tb.setTo(g(p(c)));
+    //if(DistancePtoE(A,B,ta)<1){intersect = true;return intersect;}
+    //if(DistancePtoE(A,B,tb)<1){intersect = true;return intersect;}
+    //if(DistancePtoE(A,B,tc)<1){intersect = true;return intersect;}
+    if(SegmentIntersect(A,B,ta,tb)){intersect = true;return intersect;}
+   
+    return intersect;
+  }
+  
   boolean CheckUnuse(int i,int j,int k){
     boolean unuse = false;
     for (int u=0;u<nu;u++){
@@ -348,33 +364,12 @@ void showBezier(pt A, pt B, pt C){
        B.setTo(g(p(fc)));
        float  ang=angle(V(C,B),V(C,D)); 
        
-       if(ang<(3*PI/5)){
+       if(ang<(PI*(countBorders()-3))/countBorders()){
           NP.setTo(B(B,C,D,s));
         //Gn[V[n(fc)]].setTo(L(B,norm(V(D,C))/(norm(V(B,C))+norm(V(C,D))),D));
           G[V[n(fc)]].translateTowards(s,NP);
-          
-          
-          //int dd = ccwNeighbor(n(fc));
-          //C.setTo(g(dd));
-          //D.setTo(g(ccwNeighbor(dd)));
-          //B.setTo(g(fc));
-          //NP.setTo(B(B,C,D,s));
-          //G[V[n(dd)]].translateTowards(-s/20,NP);
-          
-          //int bb = leftNeighbor(p(fc));
-          //C.setTo(g(p(fc)));
-          //D.setTo(g(fc));
-          //B.setTo(g(bb));
-          //NP.setTo(B(B,C,D,s));
-          //G[V[p(fc)]].translateTowards(-s/20,NP);
-          
-          
        }
-       for(int j = 0;j<nu;j++){
-         if(V[n(fc)] == UV[j]){
-           
-         }
-       }
+       
      }
      
    }
