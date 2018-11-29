@@ -105,26 +105,7 @@ pt P(pt O, float x, vec I, float y, vec J) {return P(O.x+x*I.x+y*J.x,O.y+x*I.y+y
 pt P(pt O, float x, vec I, float y, vec J, float z, vec K) {return P(O.x+x*I.x+y*J.x+z*K.x,O.y+x*I.y+y*J.y+z*K.y,O.z+x*I.z+y*J.z+z*K.z);}  // O+xI+yJ+kZ
 void makePts(pt[] C) {for(int i=0; i<C.length; i++) C[i]=P();}
 pt Bezier(pt A, pt B, pt C, float t) {return L(L(A,t,B),t,L(B,t,C));}
- //lerp
-pt L(float a,pt A,float b,pt B, float t){float s = (float)(t-a)/(float)(t-b); pt E =new pt();return E=L(A,s,B);}
-pt L(float a,pt A,float b,pt B, float c,pt C,float t){
-  pt S = new pt();
-   pt E = new pt();
-   pt P = new pt();
-   S = L(a,A,b,B,t);
-   E = L(b,B,c,C,t);
-   P = L(a,S,c,E,t);
-   return P;
- }
-pt L(float a,pt A, float b, pt B, float c, pt C, float d, pt D,float t){
-   pt S = new pt();
-   pt E = new pt();
-   pt P = new pt();
-   S = L(a,A,b,B,c,C,t);
-   E = L(b,B,c,C,d,D,t);
-   P = L(a,S,d,E,t);
-   return P;
- }
+  
 // ===== mouse
 pt Mouse() {return P(mouseX,mouseY,0);};                                          // current mouse location
 pt Pmouse() {return P(pmouseX,pmouseY,0);};

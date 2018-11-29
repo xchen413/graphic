@@ -12,7 +12,7 @@ class MESH {
     int[] V = new int [3*maxnt];   
     int[] O = new int [3*maxnt];  
     
-    //unuse triangles
+    //unuse tris
     int[] UV = new int [3*maxnt]; 
     int nu=0; // count of UV
     
@@ -20,14 +20,14 @@ class MESH {
     void ResetCut(){for(int i=0;i<nu;i++){UV[i]=0;};}
     // current corner that can be edited with keys
   MESH() {for (int i=0; i<maxnv; i++) G[i]=new pt();};
-  void reset() {nv=0; nt=0; nc=0;}                                                  // removes all vertices and triangles
+  void reset() {nv=0; nt=0; nc=0;}                                                  // removes all vertices and tris
   void loadVertices(pt[] P, int n) {nv=0; for (int i=0; i<n; i++) addVertex(P[i]);}
   void writeVerticesTo(pts P) {for (int i=0; i<nv; i++) P.G[i].setTo(G[i]);}
   void addVertex(pt P) { G[nv++].setTo(P); }                                             // adds a vertex to vertex table G
-  void addTriangle(int i, int j, int k) {V[nc++]=i; V[nc++]=j; V[nc++]=k; nt=nc/3; }     // adds triangle (i,j,k) to V table
+  void addTri(int i, int j, int k) {V[nc++]=i; V[nc++]=j; V[nc++]=k; nt=nc/3; }     // adds tri (i,j,k) to V table
 
   // CORNER OPERATORS
-  int t (int c) {int r=int(c/3); return(r);}                   // triangle of corner c
+  int t (int c) {int r=int(c/3); return(r);}                   // tri of corner c
   int n (int c) {int r=3*int(c/3)+(c+1)%3; return(r);}         // next corner
   int p (int c) {int r=3*int(c/3)+(c+2)%3; return(r);}         // previous corner
   pt g (int c) {return G[V[c]];}                             // shortcut to get the point where the vertex v(c) of corner c is located
@@ -56,28 +56,29 @@ class MESH {
     {
     for (int v=0; v<nv; v++) 
       {
-      if(isInterior[v]==1) 
-        {fill(green);}
-      else if(isInterior[v]==2){ fill(black);}
-      else {fill(red);}
+      if(isInterior[v]==1){fill(brown);}
+      
+      else if(isInterior[v]==3){ fill(black);}
+      else if(isInterior[v]==2){fill(red);}
+      
       show(G[v],r);
       }
     }                          
   void showInteriorVertices(float r) {for (int v=0; v<nv; v++) if(isInterior[v]==1) show(G[v],r); }                          // shows all vertices as dots
-  void showTriangles() { for (int c=0; c<nc; c+=3) show(g(c), g(c+1), g(c+2)); }         // draws all triangles (edges, or filled)
+  void showTris() { for (int c=0; c<nc; c+=3) show(g(c), g(c+1), g(c+2)); }         // draws all tris (edges, or filled)
   void showEdges() {for (int i=0; i<nc; i++) showEdge(i); };         // draws all edges of mesh twice
 
   void triangulate()      // performs Delaunay triangulation using a quartic algorithm
    {
      c=0;                   // to reset current corner
-     pt Center;
+     pt Center=P();
      boolean good = false;
      // **01 implement it
      for (int i=0;i<nv;i++){
        for(int j=i+1;j<nv;j++){
          for(int k=j+1;k<nv;k++){
            if(!isFlatterThan(G[i],G[j],G[k],10)){
-             Center = CircumCenter(G[i],G[j],G[k]);
+             Center.setTo(CircumCenter(G[i],G[j],G[k]));
              good = true;
              for(int m=0;m<nv;m++){
                if((m!=i)&&(m!=j)&&(m!=k)){
@@ -89,10 +90,10 @@ class MESH {
              if(good){
                    if(ccw(G[i],G[j],G[k])){
                      if(!CheckUnuse(i,j,k)){
-                     addTriangle(i,j,k);}
+                     addTri(i,j,k);}
                    }else{
                      if(!CheckUnuse(i,k,j)){
-                     addTriangle(i,k,j);}
+                     addTri(i,k,j);}
                    }
                  }
            }
@@ -164,14 +165,14 @@ class MESH {
         vcount[V[i]]++;
         
         if(bord(i)){
-          isInterior[V[n(i)]]=0;
-          isInterior[V[p(i)]]=0;
+          isInterior[V[n(i)]]=2;
+          isInterior[V[p(i)]]=2;
         }
       }
       for(int i=0;i<nu;i++){
         if(vcount[UV[i]]==0){
           
-          isInterior[UV[i]]=2;
+          isInterior[UV[i]]=3;
         }
       }
       
@@ -231,7 +232,7 @@ void showBezier(pt A, pt B, pt C){
         showBezier(P(iCenter,oCenter),oCenter,P(oCenter,ooCenter));
       }
     }
-    }               // draws arcs in triangles
+    }               // draws arcs in tris
     
    void drawVoronoiFaceOfInteriorVertices(){
      float dc =1./(nv-1);
@@ -264,13 +265,13 @@ void showBezier(pt A, pt B, pt C){
    }
 
  
-  pt triCenter(int c) {return P(g(c),g(n(c)),g(p(c))); }  // returns center of mass of triangle of corner c
-  pt triCircumcenter(int c) {return CircumCenter(g(c),g(n(c)),g(p(c))); }  // returns circumcenter of triangle of corner c
+  pt triCenter(int c) {return P(g(c),g(n(c)),g(p(c))); }  // returns center of mass of tri of corner c
+  pt triCircumcenter(int c) {return CircumCenter(g(c),g(n(c)),g(p(c))); }  // returns circumcenter of tri of corner c
   
   /****************** phase 2 ******************************/
   void CheckCut(pt A, pt B){
     for (int i = 0;i<nt;i++){
-      if(CutTriangle(A,B,i)){
+      if(CutTri(A,B,i)){
         UV[nu++]=V[i*3];UV[nu++]=V[i*3+1];UV[nu++]=V[i*3+2];
        
       }
@@ -278,11 +279,12 @@ void showBezier(pt A, pt B, pt C){
   
   }
 
-  boolean CutTriangle(pt A, pt B, int i){
+  boolean CutTri(pt A, pt B, int i){
     boolean intersect = false;
-    pt ta = g(i*3);
-    pt tb = g(i*3+1);
-    pt tc = g(i*3+2);
+    pt ta = P();pt tb = P(); pt tc =P();
+    ta.setTo(g(i*3));
+    tb.setTo(g(i*3+1));
+    tc.setTo(g(i*3+2));
     if(SegmentIntersect(A,B,ta,tb)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tb,tc)){intersect = true;return intersect;}
     if(SegmentIntersect(A,B,tc,ta)){intersect = true;return intersect;}
@@ -324,27 +326,97 @@ void showBezier(pt A, pt B, pt C){
       }
       }
     }
-  void smoothenBoundary(float s){
-   pt[] Gn = new pt[nv];//
-   for(int v=0; v<nv; v++){
-      Gn[v]=P();
+    
+  void showBorderCorner(){
+    for(int c=0;c<nc;c++){
+      if(bord(c)){
+        show(cg(c),15);
+      }
     }
+  }
+  void smoothenBoundary(float s){
    
-   for(int v=0;v<nv;v++){
-     if(isInterior[v]==0){
+   pt B=P();pt C=P();pt D=P(); pt NP=P();
+   
+   
+   for(int i=0;i<nc;i++){
+     if(bord(i)){ // for every bord c
+       int fc = i;//will not change inside if
        
+       C.setTo(g(n(fc))); // focus point, then find it's 2 neighbors
+       D.setTo(g(ccwNeighbor(n(fc))));
+       B.setTo(g(p(fc)));
+       float  ang=angle(V(C,B),V(C,D)); 
+       
+       if(ang<(3*PI/5)){
+          NP.setTo(B(B,C,D,s));
+        //Gn[V[n(fc)]].setTo(L(B,norm(V(D,C))/(norm(V(B,C))+norm(V(C,D))),D));
+          G[V[n(fc)]].translateTowards(s,NP);
+          
+          
+          //int dd = ccwNeighbor(n(fc));
+          //C.setTo(g(dd));
+          //D.setTo(g(ccwNeighbor(dd)));
+          //B.setTo(g(fc));
+          //NP.setTo(B(B,C,D,s));
+          //G[V[n(dd)]].translateTowards(-s/20,NP);
+          
+          //int bb = leftNeighbor(p(fc));
+          //C.setTo(g(p(fc)));
+          //D.setTo(g(fc));
+          //B.setTo(g(bb));
+          //NP.setTo(B(B,C,D,s));
+          //G[V[p(fc)]].translateTowards(-s/20,NP);
+          
+          
+       }
+       for(int j = 0;j<nu;j++){
+         if(V[n(fc)] == UV[j]){
+           
+         }
+       }
      }
+     
    }
    
+   
+   
  }
- pt newBoudaryP(pt A,pt B,pt C, pt D,pt E){
-   float a = norm(V(A,B));
-   float b = norm(V(B,C));
-   float c = norm(V(C,D));
-   float d = norm(V(D,E));
-   C = L((-0.5)*(a+b),A,(-0.25)*(b),B,0.25*(c),D,0.5*(c+d),E,0);
-   return C;
+ 
+ int ccwNeighbor(int i){
+       int sc = s(i);
+       int cc = i;
+       int nb=0;
+       for(int f=0;f<100;f++){
+         if(V[sc] == V[cc]){
+           sc = s(sc);
+           cc = i;
+         }else{break;}
+       }
+       nb=sc;
+       return nb;
  }
+  int leftNeighbor(int i){
+       int uc = u(i);
+       int cc = i;
+       int nb=0;
+       for(int f=0;f<100;f++){
+         if(V[uc] == V[cc]){
+           uc = u(uc);
+           cc = i;
+         }else{break;}
+       }
+       nb=uc;
+       return nb;
+ }
+ //pt newBondaryP(pt A,pt B,pt C){
+ //  float a = norm(V(A,B));
+ //  float b = norm(V(B,C));
+   
+ //  //C = L((-0.5)*(a+b),A,(-0.25)*(b),B,0.25*(c),D,0.5*(c+d),E,0);
+ //  B = L((-0.5)*a,A,0.5*b,C,0);
+ //  return B;
+ //}
  
 
   } // end of MESH

@@ -5,7 +5,7 @@ Boolean
   showPillars=false,
   animating=false, 
   showEdges=true,
-  showTriangles=true,
+  showTris=true,
   showVoronoi=true,
   showArcs=false,
   showCorner=true,
@@ -13,9 +13,9 @@ Boolean
   showVoronoiFaces=false,
   live=true,   // updates mesh at each frame
 
-  step1=true,
-  step2=true,
-  step3=true,
+  step1=false,
+  step2=false,
+  step3=false,
   step4=false,
   step5=false,
   step6=false,
@@ -51,8 +51,9 @@ int
   PTris=0,
   QTris=0,
   numberOfBorderEdges=0,
-  tetCount=0;
- 
+  tetCount=0,
+  
+  tuckLimit=0;
 
 pts P = new pts(); // polyloop in 3D
 pts Q = new pts(); // second polyloop in 3D
@@ -78,7 +79,7 @@ void setup() {
   P.loadPts("data/pts");  
   Q.loadPts("data/pts2"); // loads saved models from file (comment out if they do not exist yet)
   noSmooth();
-  //frameRate(30);
+  //frameRate(5);
   sphereDetail(12);
   R=P; S=Q;
   println(); println("_______ _______ _______ _______");
@@ -116,7 +117,7 @@ void draw() {
       M.loadVertices(R.G,R.nv); 
       M.triangulate(); // **01 implement it in Mesh
       }
-    if(showTriangles) M.showTriangles();
+    if(showTris) M.showTris();
     noStroke();
     popMatrix();
     }
@@ -136,7 +137,7 @@ void draw() {
     
   if(step3)
     {
-    M.classifyVertices();  // **03 implement it in Mesh
+    M.classifyVertices(); // **03 implement it in Mesh
     showBalls=false;
     fill(green); noStroke(); 
     M.showVertices(rb+4); 
@@ -145,12 +146,18 @@ void draw() {
   if(step4)
     {
     if(!tuck){
-    for(int i=0; i<1; i++) {M.smoothenInterior(0.5);M.smoothenInterior(-0.5); }// **04 implement it in Mesh
+      for(int i=0;i<10;i++){M.smoothenBoundary(0.2);M.smoothenBoundary(-0.1);}
+     //if(tuckLimit<100){M.smoothenBoundary(0.5);tuckLimit++;}
+     
+     M.showBorderCorner();
+    for(int i=0;i<10;i++){M.smoothenInterior(0.5);M.smoothenInterior(-0.5); }// **04 implement it in Mesh
+      
     }
     else{
-    for(int i=0; i<1; i++) {M.smoothenInterior(0.1);}
+    for(int i=0; i<10; i++) {M.smoothenInterior(0.1);}
     }
     M.writeVerticesTo(R);  
+    live=true;
     }
     
  // **05 implement corner operators in Mesh
@@ -217,6 +224,16 @@ void draw() {
        beam(CutSet[i-1],CutSet[i],15);}
       //println("nc:"+M.nc);
       //println("nv:"+M.nv);
+    //  if(!tuck){
+    //  for(int i=0;i<10;i++){M.smoothenBoundary(0.1);M.smoothenBoundary(-0.1);}
+    // //if(tuckLimit<100){M.smoothenBoundary(0.5);tuckLimit++;}
+     
+    //   M.showBorderCorner();
+    //  for(int i=0;i<10;i++){M.smoothenInterior(0.5);M.smoothenInterior(-0.5); }// **04 implement it in Mesh
+      
+    //}
+    //M.writeVerticesTo(R);  
+    //live=true;
       
     }
     
@@ -231,8 +248,8 @@ void draw() {
 
   int line=0;
   scribeHeader(" Project 3 for Rossignac's 2018 Graphics Course CS6491 by Xinrui Chen ",line++);
-  if(step2){scribeHeader(P.count()+" vertices, "+M.nt+" triangles "+M.countBorders()+" border edges ",line++);}else{
-    scribeHeader(P.count()+" vertices, "+M.nt+" triangles ",line++);
+  if(step2){scribeHeader(P.count()+" vertices, "+M.nt+" tris "+M.countBorders()+" border edges ",line++);}else{
+    scribeHeader(P.count()+" vertices, "+M.nt+" tris ",line++);
   }
   if(live) scribeHeader("LIVE",line++);
  

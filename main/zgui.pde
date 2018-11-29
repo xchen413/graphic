@@ -74,7 +74,7 @@ void keyPressed()
     if(key=='Q') ;
     if(key=='R') {R=P; S=Q;}; 
     if(key=='S') {S=P; R=Q;};
-    if(key=='T') showTriangles=!showTriangles; 
+    if(key=='T') showTris=!showTris; 
     if(key=='U') ;
     if(key=='V') showVoronoi=!showVoronoi; 
     if(key=='W') P.savePts("data/"+FileName+".pts"); 
